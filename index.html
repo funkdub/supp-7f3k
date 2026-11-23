@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>VFXStudio: Visual Effects Generation with Scene Interactions</title>
+<style>
+:root{color-scheme:light;--bg:#ffffff;--alt:#f5f5f7;--fg:#1d1d1f;--mut:#6b6b70;--line:#e2e2e7;--acc:#a4262c;--pill:#2b2b2b}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 "Helvetica Neue",Helvetica,Arial,"Noto Sans","Liberation Sans",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1360px;margin:0 auto;padding:0 20px}
+.text{max-width:860px;margin-left:auto;margin-right:auto}
+.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;min-height:46px;overflow-x:auto;white-space:nowrap}
+.top b{font-size:15px}
+.top a{font-size:14px;color:var(--mut);text-decoration:none}
+.top a:hover{color:var(--fg)}
+.hero{text-align:center;padding:60px 0 34px}
+h1{font-size:clamp(28px,4.2vw,46px);line-height:1.15;font-weight:700;letter-spacing:-.01em;margin:0 auto 20px;max-width:1040px;text-wrap:balance}
+.authors{font-size:20px;margin:0}
+.venue{font-size:16px;color:var(--mut);margin:6px 0 0}
+.tagline{font-size:18px;margin:18px auto 0;max-width:820px}
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:26px}
+.pills a{background:var(--pill);color:#ffffff;text-decoration:none;font-size:15px;padding:9px 20px;border-radius:999px}
+.pills a:hover{background:#000000}
+.band{padding:46px 0}
+.band.alt{background:var(--alt)}
+h2{font-size:30px;font-weight:700;text-align:center;margin:0 0 10px;text-wrap:balance}
+h3{font-size:19px;font-weight:600;margin:34px 0 12px}
+.note{color:var(--mut);text-align:center;font-size:15.5px;margin:0 auto 24px;max-width:820px}
+.abs{text-align:justify;hyphens:auto;margin:14px auto 0}
+.grid{display:grid;gap:26px 18px}
+.c1{grid-template-columns:minmax(0,1fr)}
+.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:900px){.c2,.c3{grid-template-columns:minmax(0,1fr)}}
+figure{margin:0}
+video,img{display:block;width:100%;height:auto;border-radius:6px;background:#ececef}
+figcaption{font-size:14.5px;margin-top:8px;text-align:center}
+figcaption .tag{display:inline-block;font-size:12px;color:var(--acc);border:1px solid var(--acc);border-radius:4px;padding:0 6px;margin-left:6px}
+figcaption a{display:inline-block;margin-left:8px;color:var(--mut);font:12px Menlo,Consolas,monospace;text-decoration:none}
+figcaption a:hover{color:var(--fg)}
+.missing{border:1px dashed var(--acc);border-radius:6px;color:var(--acc);padding:34px 8px;text-align:center;font:13px Menlo,Consolas,monospace}
+footer{padding:26px 0 40px;color:var(--mut);font-size:13px;text-align:center;border-top:1px solid var(--line)}
+h1{max-width:none}
+h2{text-align:left;margin-bottom:0}
+h3.group{font-size:23px;font-weight:700;margin:46px 0 4px}
+.prompt{font-size:19px;font-weight:600;line-height:1.4;margin:0 0 12px}
+.c1>figure{margin-top:8px}
+.pg{align-items:end;margin-top:20px}
+.grid+.grid{margin-top:26px}
+.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:1100px){.c4{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:900px){.c4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.c4{grid-template-columns:minmax(0,1fr)}}
+.rt{margin:6px auto 0;border-collapse:collapse;font-size:13.5px;line-height:1.35}
+.rt th,.rt td{padding:1px 10px;font-weight:400;text-align:center}
+.rt thead th{color:var(--mut);font-size:12px;border-bottom:1px solid var(--line);padding-bottom:3px}
+.rt tbody tr:first-child>*{padding-top:4px}
+.rt tbody th{text-align:left}
+.rt .ed{color:var(--acc);font-weight:700}
+.rt .pin{color:var(--mut)}
+.ar{display:inline-block;width:16px;height:16px;vertical-align:-3px}
+.ar path{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.still{display:block;color:var(--mut);font-size:13px}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<h1>VFXStudio: Visual Effects Generation<br>with Scene Interactions</h1>
+<p class="authors">Anonymous Authors</p>
+<p class="venue">CVPR 2027 Submission</p>
+<p class="tagline">Supplementary video results</p>
+<div class="pills"><a href="#control">Interaction control</a><a href="#single">Single-VFX</a><a href="#multi">Multi-VFX</a><a href="#extra">Additional results</a></div>
+</div></header>
+<main>
+<section class="band" id="control"><div class="wrap">
+<h2>Interaction control</h2>
+<h3>Explode the green jar.</h3>
+<div class="grid c4 sync">
+<figure>
+<img src="still_w_jars.jpg" width="720" height="480" alt="">
+<figcaption>Input image</figcaption>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="w_jars__def.mp4"></video>
+<figcaption>Default<a href="w_jars__def.mp4">w_jars__def.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">yellow jar</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="170 degrees" style="transform:rotate(-170deg)"><title>170&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.49</td></tr><tr><th scope="row">red jar</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="9 degrees" style="transform:rotate(-9deg)"><title>9&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.48</td></tr></tbody></table>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="w_jars__shi.mp4"></video>
+<figcaption>Strength &#215;2.0<a href="w_jars__shi.mp4">w_jars__shi.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">yellow jar</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="170 degrees" style="transform:rotate(-170deg)"><title>170&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td class="ed">1.00</td></tr><tr><th scope="row">red jar</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="9 degrees" style="transform:rotate(-9deg)"><title>9&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td class="ed">0.99</td></tr></tbody></table>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="w_jars__d090.mp4"></video>
+<figcaption>Direction <svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="90 degrees" style="transform:rotate(-90deg)"><title>90&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg><a href="w_jars__d090.mp4">w_jars__d090.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">yellow jar</th><td class="ed"><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="90 degrees" style="transform:rotate(-90deg)"><title>90&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.49</td></tr><tr><th scope="row">red jar</th><td class="ed"><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="90 degrees" style="transform:rotate(-90deg)"><title>90&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.48</td></tr></tbody></table>
+</figure>
+</div>
+<h3>Explode the green pepper.</h3>
+<div class="grid c4 sync">
+<figure>
+<img src="still_peppers.jpg" width="720" height="480" alt="">
+<figcaption>Input image</figcaption>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="peppers__def.mp4"></video>
+<figcaption>Default<a href="peppers__def.mp4">peppers__def.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">yellow pepper</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="163 degrees" style="transform:rotate(-163deg)"><title>163&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.30</td></tr><tr><th scope="row">red pepper</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="210 degrees" style="transform:rotate(-210deg)"><title>210&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.30</td></tr></tbody></table>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="peppers__shi.mp4"></video>
+<figcaption>Strength &#215;2.5<a href="peppers__shi.mp4">peppers__shi.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">yellow pepper</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="163 degrees" style="transform:rotate(-163deg)"><title>163&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td class="ed">0.75</td></tr><tr><th scope="row">red pepper</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="210 degrees" style="transform:rotate(-210deg)"><title>210&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td class="ed">0.75</td></tr></tbody></table>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="peppers__d180.mp4"></video>
+<figcaption>Direction <svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="180 degrees" style="transform:rotate(-180deg)"><title>180&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg><a href="peppers__d180.mp4">peppers__d180.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">yellow pepper</th><td class="ed"><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="180 degrees" style="transform:rotate(-180deg)"><title>180&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.30</td></tr><tr><th scope="row">red pepper</th><td class="ed"><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="180 degrees" style="transform:rotate(-180deg)"><title>180&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.30</td></tr></tbody></table>
+</figure>
+</div>
+<h3>Explode the brown soap.</h3>
+<div class="grid c4 sync">
+<figure>
+<img src="still_soap.jpg" width="720" height="480" alt="">
+<figcaption>Input image</figcaption>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="soap__def.mp4"></video>
+<figcaption>Default<a href="soap__def.mp4">soap__def.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">green soap</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="183 degrees" style="transform:rotate(-183deg)"><title>183&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.36</td></tr></tbody></table>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="soap__shi.mp4"></video>
+<figcaption>Strength &#215;2.5<a href="soap__shi.mp4">soap__shi.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">green soap</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="183 degrees" style="transform:rotate(-183deg)"><title>183&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td class="ed">0.90</td></tr></tbody></table>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="soap__r180.mp4"></video>
+<figcaption>Direction reversed<a href="soap__r180.mp4">soap__r180.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">green soap</th><td class="ed"><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="3 degrees" style="transform:rotate(-3deg)"><title>3&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.36</td></tr></tbody></table>
+</figure>
+</div>
+<h3>Crumble the green soap.</h3>
+<div class="grid c4 sync">
+<figure>
+<img src="still_soapw.jpg" width="720" height="480" alt="">
+<figcaption>Input image</figcaption>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="soapw__def.mp4"></video>
+<figcaption>Default<a href="soapw__def.mp4">soapw__def.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">brown soap</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="3 degrees" style="transform:rotate(-3deg)"><title>3&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td>0.17</td></tr></tbody></table>
+</figure>
+<figure>
+<video controls muted loop playsinline preload="none" width="720" height="480" src="soapw__smid.mp4"></video>
+<figcaption>Strength &#215;2<a href="soapw__smid.mp4">soapw__smid.mp4</a></figcaption>
+<table class="rt"><thead><tr><th scope="col">object</th><th scope="col">direction</th><th scope="col">strength</th></tr></thead><tbody><tr><th scope="row">brown soap</th><td><svg class="ar" viewBox="-8 -8 16 16" role="img" aria-label="3 degrees" style="transform:rotate(-3deg)"><title>3&#176;</title><path d="M-6 0H5.5M1.8 -3.6L5.8 0L1.8 3.6"/></svg></td><td class="ed">0.33</td></tr></tbody></table>
+</figure>
+</div>
+</div></section>
+<section class="band alt" id="single"><div class="wrap">
+<h2>Single-VFX</h2>
+<div class="grid c1">
+<figure>
+<p class="prompt">Red sports car deflates like a balloon.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1372" height="568" src="single_deflate_3.mp4"></video>
+<figcaption><a href="single_deflate_3.mp4">single_deflate_3.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Levitate the teddy bear, while the teddy bear next to it stays on the ground.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1372" height="282" src="study_08.mp4"></video>
+<figcaption><a href="study_08.mp4">study_08.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Give the girl a Harley Quinn look with pigtails.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1548" height="568" src="single_harley_2.mp4"></video>
+<figcaption><a href="single_harley_2.mp4">single_harley_2.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Turn the man into Venom.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1548" height="568" src="single_venom_3.mp4"></video>
+<figcaption><a href="single_venom_3.mp4">single_venom_3.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Turn the penguin into Venom.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1548" height="568" src="single_venom_4.mp4"></video>
+<figcaption><a href="single_venom_4.mp4">single_venom_4.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Turn the man into Venom.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1448" height="346" src="cmp_venom.mp4"></video>
+<figcaption><a href="cmp_venom.mp4">cmp_venom.mp4</a></figcaption>
+</figure>
+</div>
+<h3 class="group">Interaction with neighbouring objects</h3>
+<div class="grid c3 pg">
+<figure>
+<p class="prompt">Explode the snow globe.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="w_globe__def.mp4"></video>
+<figcaption><a href="w_globe__def.mp4">w_globe__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Explode the lime.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="citrus__def.mp4"></video>
+<figcaption><a href="citrus__def.mp4">citrus__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Explode the red bucket.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="toys__def.mp4"></video>
+<figcaption><a href="toys__def.mp4">toys__def.mp4</a></figcaption>
+</figure>
+</div>
+<div class="grid c1">
+<figure>
+<p class="prompt">Explode the bottle on the left, and the pastry next to it is pushed away.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1372" height="282" src="study_02.mp4"></video>
+<figcaption><a href="study_02.mp4">study_02.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Explode the donut on the left, and the donut next to it is pushed away.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1372" height="282" src="study_20.mp4"></video>
+<figcaption><a href="study_20.mp4">study_20.mp4</a></figcaption>
+</figure>
+</div>
+</div></section>
+<section class="band" id="multi"><div class="wrap">
+<h2>Multi-VFX</h2>
+<div class="grid c1">
+<figure>
+<p class="prompt">Dissolve the carved vase, crumble the tall vase, and Inflate the small vase.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1448" height="346" src="cmp_vases.mp4"></video>
+<figcaption><a href="cmp_vases.mp4">cmp_vases.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">The R block melts, the A block levitates, and the D block crumbles, while the E block stays still.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1448" height="346" src="cmp_blocks.mp4"></video>
+<figcaption><a href="cmp_blocks.mp4">cmp_blocks.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Levitate the person on the bottom-right and the elephant on the left.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1372" height="282" src="study_12.mp4"></video>
+<figcaption><a href="study_12.mp4">study_12.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Deflate the chair, dissolve the suitcase, and change the setting to winter.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="1492" height="282" src="mul_06.mp4"></video>
+<figcaption><a href="mul_06.mp4">mul_06.mp4</a></figcaption>
+</figure>
+</div>
+</div></section>
+<section class="band alt" id="extra"><div class="wrap">
+<h2>Additional results</h2>
+<h3 class="group">One object under several effects, choice of target, three effects at once</h3>
+<div class="grid c2 pg">
+<figure>
+<p class="prompt">Explode the striped ball.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="772" height="282" src="extra_one_01.mp4"></video>
+<figcaption><a href="extra_one_01.mp4">extra_one_01.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Explode the orange and melt the glass.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="772" height="282" src="extra_one_24.mp4"></video>
+<figcaption><a href="extra_one_24.mp4">extra_one_24.mp4</a></figcaption>
+</figure>
+</div>
+<h3 class="group">Effects together with a background style</h3>
+<div class="grid c2 pg">
+<figure>
+<p class="prompt">The blue beach hut melts, and the scene turns into a rainy day.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="772" height="282" src="extra_style_15.mp4"></video>
+<figcaption><a href="extra_style_15.mp4">extra_style_15.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Explode the yellow beach hut and change the setting to winter, while the blue and red beach huts stay still.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="772" height="282" src="extra_style_16.mp4"></video>
+<figcaption><a href="extra_style_16.mp4">extra_style_16.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Melt the banana, levitate the apple, and turn the background into an oil painting, while the wine glass stays still.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="508" height="282" src="extra_style_22.mp4"></video>
+<figcaption><a href="extra_style_22.mp4">extra_style_22.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Melt the banana, levitate the apple, and change the setting to winter, while the wine glass stays still.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="508" height="282" src="extra_style_23.mp4"></video>
+<figcaption><a href="extra_style_23.mp4">extra_style_23.mp4</a></figcaption>
+</figure>
+</div>
+<h3 class="group">Further cinematic scenes</h3>
+<div class="grid c4 pg">
+<figure>
+<p class="prompt">Explode the pile of chips.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="f_chips__def.mp4"></video>
+<figcaption><a href="f_chips__def.mp4">f_chips__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Levitate the spinning top.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="f_top_l__def.mp4"></video>
+<figcaption><a href="f_top_l__def.mp4">f_top_l__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Levitate the spaceship.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="f_falcon_l__def.mp4"></video>
+<figcaption><a href="f_falcon_l__def.mp4">f_falcon_l__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Melt the golden idol.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="f3_idol_m__def.mp4"></video>
+<figcaption><a href="f3_idol_m__def.mp4">f3_idol_m__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Explode the green apple.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="f3_apple_x__def.mp4"></video>
+<figcaption><a href="f3_apple_x__def.mp4">f3_apple_x__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Melt the green apple.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="f3_apple_m__def.mp4"></video>
+<figcaption><a href="f3_apple_m__def.mp4">f3_apple_m__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Crumble the park gate.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="f3_gate_c__def.mp4"></video>
+<figcaption><a href="f3_gate_c__def.mp4">f3_gate_c__def.mp4</a></figcaption>
+</figure>
+<figure>
+<p class="prompt">Levitate the model house.</p>
+<video class="lazy" controls muted loop playsinline preload="none" width="720" height="480" src="f3_house_l__def.mp4"></video>
+<figcaption><a href="f3_house_l__def.mp4">f3_house_l__def.mp4</a></figcaption>
+</figure>
+</div>
+</div></section>
+</main>
+<script>
+(function(){
+  if(!('IntersectionObserver' in window)){return;}
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){return;}
+  function play(v){var p=v.play();if(p&&p.catch){p.catch(function(){});}}
+  function stop(v){if(!v.paused||v.readyState>0){v.pause();v.load();}}
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){play(e.target);}else{stop(e.target);}});
+  },{rootMargin:'150px 0px',threshold:0.01});
+  document.querySelectorAll('video.lazy').forEach(function(v){io.observe(v);});
+  // the clips of one input image start together and stay in step
+  var gio=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      var g=e.target,vs=g._vs;
+      if(!e.isIntersecting){g._on=false;clearTimeout(g._t);vs.forEach(stop);return;}
+      if(g._on){return;}
+      g._on=true;vs.forEach(play);
+      var t0=Date.now();
+      (function wait(){
+        if(!g._on){return;}
+        if(vs.every(function(v){return v.readyState>=3;})||Date.now()-t0>2500){vs.forEach(function(v){try{v.currentTime=0;}catch(x){}});}
+        else{g._t=setTimeout(wait,100);}
+      })();
+    });
+  },{rootMargin:'150px 0px',threshold:0});
+  document.querySelectorAll('.sync').forEach(function(g){
+    var vs=g._vs=Array.prototype.slice.call(g.querySelectorAll('video')),last=0;
+    if(!vs.length){return;}
+    vs[0].addEventListener('timeupdate',function(){
+      var t=vs[0].currentTime;
+      if(t<last-1){vs.forEach(function(v,i){if(i&&!v.paused){try{v.currentTime=t;}catch(x){}}});}
+      last=t;
+    });
+    gio.observe(g);
+  });
+})();
+</script>
+</body>
+</html>
